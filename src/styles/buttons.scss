@@ -1,0 +1,16 @@
+@import './variables.scss';
+
+.button-green {
+  background-color: $purple;
+  font-size: 20px;
+  font-weight: 600;
+  color: $color-white;
+  transition: $transition-base;
+  cursor: pointer;
+  border-radius: 6px;
+  border: 1px solid $purple;
+
+  &:hover {
+    background: none;
+  }
+}

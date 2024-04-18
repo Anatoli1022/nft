@@ -1,0 +1,48 @@
+@import '../../../styles/variables.scss';
+
+.header {
+  padding-top: 30px;
+  padding-bottom: 28px;
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  column-gap: 32px;
+}
+
+.link {
+  font-size: 20px;
+  font-weight: 500;
+  color: $color-black;
+  transition: $transition-base;
+  &:hover {
+    color: $purple;
+  }
+}
+
+.basket {
+  position: relative;
+}
+
+.items-basket {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-white;
+  position: absolute;
+  background-color: $purple;
+  border-radius: 50%;
+  min-width: 26px;
+  min-height: 26px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 90%;
+}

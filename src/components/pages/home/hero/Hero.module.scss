@@ -1,0 +1,33 @@
+@import '../../../../styles/variables.scss';
+
+.hero {
+  position: relative;
+}
+
+.hero-container {
+  position: relative;
+  padding-top: 80px;
+  padding-left: 40px;
+  padding-bottom: 180px;
+}
+
+.title {
+  font-size: 96px;
+  font-weight: 700;
+  line-height: 110%;
+  color: $color-white;
+}
+
+.button {
+  padding: 16px 56px;
+  margin-top: 40px;
+}
+
+.background {
+  position: absolute;
+  left: 0;
+  top: 0;
+  object-fit: cover;
+  z-index: -1;
+  width: 100%;
+}

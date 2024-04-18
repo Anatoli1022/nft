@@ -1,0 +1,49 @@
+@import '../../../../styles/variables.scss';
+
+.error {
+  margin-top: 80px;
+}
+
+.error-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  font-size: 64px;
+  font-weight: 700;
+  margin-top: 32px;
+  line-height: 110%;
+  letter-spacing: 0%;
+  text-align: center;
+}
+
+.text {
+  font-size: 20px;
+  font-weight: 500;
+  max-width: 600px;
+  color: $color-gray;
+  margin-top: 16px;
+  text-align: center;
+  line-height: 130%;
+}
+
+.link {
+  padding: 13px 56px;
+  background-color: $purple;
+  color: $color-white;
+  border-radius: 6px;
+  font-size: 20px;
+  margin-top: 32px;
+  font-weight: 600;
+  line-height: 130%;
+  transition: $transition-base;
+  border: 1px solid $purple;
+
+  &:hover {
+    background: none;
+    color: $color-black;
+  }
+}
