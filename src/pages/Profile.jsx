@@ -1,5 +1,11 @@
+import Character from '../components/pages/profile/character/Character';
+
 const Profile = () => {
-  return <>afafaf</>;
+  return (
+    <>
+      <Character />
+    </>
+  );
 };
 
 export default Profile;
