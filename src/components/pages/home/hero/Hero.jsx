@@ -9,8 +9,6 @@ const Hero = () => {
   return (
     <section className={cx('hero')}>
       <div className={cx('container', 'hero-container')}>
-        <h1 className={cx('title')}>Amazing NFT hub</h1>
-        <button className={cx('button', 'button-green')}>Check out</button>
         <img
           src={background}
           alt=""
