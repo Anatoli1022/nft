@@ -23,7 +23,7 @@
   color: $color-black;
   transition: $transition-base;
   &:hover {
-    color: $purple;
+    color: $color-green;
   }
 }
 
@@ -37,7 +37,7 @@
   justify-content: center;
   color: $color-white;
   position: absolute;
-  background-color: $purple;
+  background-color: $color-green;
   border-radius: 50%;
   min-width: 26px;
   min-height: 26px;

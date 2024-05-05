@@ -1,14 +1,14 @@
 @import './variables.scss';
 
 .button-green {
-  background-color: $purple;
+  background-color: $color-green;
   font-size: 20px;
   font-weight: 600;
   color: $color-white;
   transition: $transition-base;
   cursor: pointer;
   border-radius: 6px;
-  border: 1px solid $purple;
+  border: 1px solid $color-green;
 
   &:hover {
     background: none;

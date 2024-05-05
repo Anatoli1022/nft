@@ -32,7 +32,7 @@
 
 .link {
   padding: 13px 56px;
-  background-color: $purple;
+  background-color: $color-green;
   color: $color-white;
   border-radius: 6px;
   font-size: 20px;
@@ -40,7 +40,7 @@
   font-weight: 600;
   line-height: 130%;
   transition: $transition-base;
-  border: 1px solid $purple;
+  border: 1px solid $color-green;
 
   &:hover {
     background: none;
