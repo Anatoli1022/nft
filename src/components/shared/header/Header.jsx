@@ -3,6 +3,7 @@ import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
 import { Link } from 'react-router-dom';
 
+import logo from '../../../assets/logo.jpeg';
 const cx = classNames.bind(styles);
 const logined = false;
 const Header = () => {
@@ -11,7 +12,9 @@ const Header = () => {
       <div className={cx('container')}>
         <nav className={cx('navigation')}>
           <div>
-            <Link to="/">Logo</Link>
+            <Link to="/">
+              <img src={logo} loading="eager" className={cx('logo')}/>
+            </Link>
           </div>
           <ul className={cx('list')}>
             <li>
@@ -21,7 +24,7 @@ const Header = () => {
             </li>
             <li>
               <Link to="/products" className={cx('link')}>
-               Продукты
+                Продукты
               </Link>
             </li>
 
