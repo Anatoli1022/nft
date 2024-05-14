@@ -2,15 +2,22 @@
 
 .button-green {
   background-color: $color-green;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
+  padding: 10px 20px;
   color: $color-white;
   transition: $transition-base;
   cursor: pointer;
   border-radius: 6px;
   border: 1px solid $color-green;
+  letter-spacing: 1px;
 
   &:hover {
     background: none;
+    color: $color-green;
   }
+}
+.button-active {
+  background: none;
+  color: $color-green;
 }
