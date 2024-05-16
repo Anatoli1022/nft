@@ -1,0 +1,37 @@
+@import '../../../../styles/variables.scss';
+
+.wrapper-form {
+  margin-top: 40px;
+}
+
+.title {
+  text-align: center;
+}
+
+.wrapper {
+  margin-top: 20px;
+  display: flex;
+  column-gap: 30px;
+  align-items: center;
+  justify-content: center;
+}
+
+.token-form {
+  width: 500px;
+  margin-top: 20px;
+}
+
+.list {
+  border-radius: 16px;
+  background-color: $color-gray-lite;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 14px;
+  margin-top: 20px;
+}
+
+.item {
+  padding-bottom: 4px;
+  border-bottom: 1px solid $color-black;
+}

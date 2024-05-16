@@ -38,6 +38,17 @@ const ButtonsList = ({ toggleForm, showForm }) => {
         >
           Потребитель (Завод)
         </button>
+      </li>{' '}
+      <li>
+        <button
+          onClick={() => toggleForm('searchToken')}
+          className={cx(
+            'button-green',
+            showForm === 'searchToken' ? 'button-active' : null
+          )}
+        >
+          Поиск токена
+        </button>
       </li>
     </ul>
   );
