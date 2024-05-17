@@ -1,3 +1,128 @@
 @import '../../../../styles/variables.scss';
 
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
 
+.container-character {
+  display: flex;
+  column-gap: 30px;
+  justify-content: center;
+}
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.vanilla:hover {
+  filter: drop-shadow(0 0 2em #f7df1eaa);
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+// button {
+//   border-radius: 8px;
+//   border: 1px solid transparent;
+//   padding: 0.6em 1.2em;
+//   font-size: 1em;
+//   font-weight: 500;
+//   font-family: inherit;
+//   background-color: #1a1a1a;
+//   cursor: pointer;
+//   transition: border-color 0.25s;
+// }
+// button:hover {
+//   border-color: #646cff;
+// }
+// button:focus,
+// button:focus-visible {
+//   outline: 4px auto -webkit-focus-ring-color;
+// }
+
+// @media (prefers-color-scheme: light) {
+//   :root {
+//     color: #213547;
+//     background-color: #ffffff;
+//   }
+//   a:hover {
+//     color: #747bff;
+//   }
+//   button {
+//     background-color: #f9f9f9;
+//   }
+// }
+
+.ctx {
+  /* width: 851px;
+    height: 1418px; */
+  width: 425px;
+  height: 709px;
+  border: 1px solid #cacaca;
+  /* transform: scale(.5); */
+}
+
+.wear {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: center;
+  color: $color-white;
+}
+
+.wear__btns {
+  display: flex;
+  gap: 20px;
+}
+
+.form-section {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-section img {
+  width: 100px;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.checkbox-label {
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+}
+
+.checkbox-label:hover {
+  text-decoration: none;
+}
+
+.checkbox-input {
+  display: none;
+}
+
+.wear__img {
+  border: 0.5px solid #cacaca;
+}
+
+.checkbox-input:checked + .checkbox-label::after {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  content: '✓';
+  margin-left: 5px;
+  font-size: 20px;
+}
