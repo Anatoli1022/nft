@@ -13,7 +13,7 @@ const Header = () => {
         <nav className={cx('navigation')}>
           <div>
             <Link to="/">
-              <img src={logo} loading="eager" className={cx('logo')}/>
+              <img src={logo} loading="eager" className={cx('logo')} />
             </Link>
           </div>
           <ul className={cx('list')}>
@@ -38,6 +38,11 @@ const Header = () => {
                   Войти
                 </Link>
               )}
+            </li>
+            <li>
+              <Link to="/profile" className={cx('link')}>
+                Профиль test
+              </Link>
             </li>
           </ul>
         </nav>
