@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import styles from './Error.module.scss';
 
 const cx = classNames.bind(styles);
-import error from '../../../../assets/404.jpeg';
+import error from '../../../../../public/assets/404.jpeg';
 
 const Error = () => {
   return (

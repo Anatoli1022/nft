@@ -3,7 +3,7 @@ import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
 import { Link } from 'react-router-dom';
 
-import logo from '../../../assets/logo.jpeg';
+import logo from '../../../../public/assets/logo.jpeg';
 const cx = classNames.bind(styles);
 const logined = false;
 const Header = () => {

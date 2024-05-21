@@ -61,7 +61,7 @@ const Character = () => {
   const createPicturesObj = () => {
     let pictures = {};
     for (let key in canvasParams) {
-      pictures[key] = `./src/assets/${key}-${canvasParams[key]}.png`;
+      pictures[key] = `/assets/${key}-${canvasParams[key]}.png`;
     }
     console.log('Pictures Object:', pictures);
     return pictures;
@@ -151,7 +151,7 @@ const Character = () => {
               <label htmlFor={id} className={cx('checkbox-label')}>
                 <img
                   className={cx('"wear__img"')}
-                  src={`./src/assets/prev_${key}-${elem}.png`}
+                  src={`/assets/prev_${key}-${elem}.png`}
                   alt={`${key}-${elem}`}
                 />
               </label>
