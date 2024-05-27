@@ -1,4 +1,4 @@
-
+@import '../../../../styles/variables.scss';
 
 .wrapper-form {
   margin-top: 40px;
@@ -10,4 +10,17 @@
 
 .token-form {
   margin-top: 20px;
+}
+
+.text-info {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.error {
+  color: $color-read;
+}
+
+.success {
+  color: $color-green;
 }

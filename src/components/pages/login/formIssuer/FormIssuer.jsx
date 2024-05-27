@@ -11,27 +11,32 @@ const FormIssuer = () => {
   const [name, setName] = useState('');
   const [symbol, setSymbol] = useState('');
   const [totalSupply, setTotalSupply] = useState('');
+  const [textInfo, setTextInfo] = useState('');
 
   const createToken = async (event) => {
     event.preventDefault();
+    let signer = null;
+    let provider;
 
-    if (typeof window.ethereum === 'undefined') {
-      alert(
+    if (window.ethereum == null) {
+      setTextInfo(
         'MetaMask не установлен. Пожалуйста, установите MetaMask и попробуйте снова.'
       );
-      return;
+      provider = ethers.getDefaultProvider();
+    } else {
+      provider = new ethers.BrowserProvider(window.ethereum);
+
+      signer = await provider.getSigner();
     }
+    const factory = new FactoryForERC20Carbon(signer, provider);
 
     try {
       await window.ethereum.request({ method: 'eth_requestAccounts' });
     } catch (error) {
       console.error(error);
-      alert('Пользователь отклонил доступ к аккаунту.');
+      setTextInfo('Пользователь отклонил доступ к аккаунту.');
       return;
     }
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const factory = new FactoryForERC20Carbon(signer, provider);
 
     try {
       await factory.createNewToken(
@@ -40,10 +45,11 @@ const FormIssuer = () => {
         symbol,
         totalSupply
       );
-      alert('Token created successfully!');
+
+      setTextInfo('Токен успешно создан!');
     } catch (error) {
       console.error(error);
-      alert('Error creating token.');
+      setTextInfo('Ошибка создания токена.');
     }
   };
 
@@ -96,6 +102,7 @@ const FormIssuer = () => {
         </div>
         <button className={cx('button-green')}>Отправить</button>
       </form>
+      <p className={cx('text-info')}>{textInfo}</p>
     </div>
   );
 };
