@@ -1,33 +1,108 @@
+import { useState } from 'react';
+import { ethers } from 'ethers';
+import { FactoryForERC20Carbon } from '../../../../lib/Contracts/FactoryForERC20Carbon';
 import classNames from 'classnames/bind';
 import styles from './FormIssuer.module.scss';
 
 const cx = classNames.bind(styles);
 
 const FormIssuer = () => {
+  const [ipfsDocsForApprove, setIpfsDocsForApprove] = useState('');
+  const [name, setName] = useState('');
+  const [symbol, setSymbol] = useState('');
+  const [totalSupply, setTotalSupply] = useState('');
+  const [textInfo, setTextInfo] = useState('');
+
+  const createToken = async (event) => {
+    event.preventDefault();
+    let signer = null;
+    let provider;
+
+    if (window.ethereum == null) {
+      setTextInfo(
+        'MetaMask не установлен. Пожалуйста, установите MetaMask и попробуйте снова.'
+      );
+      provider = ethers.getDefaultProvider();
+    } else {
+      provider = new ethers.BrowserProvider(window.ethereum);
+
+      signer = await provider.getSigner();
+    }
+    const factory = new FactoryForERC20Carbon(signer, provider);
+
+    try {
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+    } catch (error) {
+      console.error(error);
+      setTextInfo('Пользователь отклонил доступ к аккаунту.');
+      return;
+    }
+
+    try {
+      await factory.createNewToken(
+        ipfsDocsForApprove,
+        name,
+        symbol,
+        totalSupply
+      );
+
+      setTextInfo('Токен успешно создан!');
+    } catch (error) {
+      console.error(error);
+      setTextInfo('Ошибка создания токена.');
+    }
+  };
+
   return (
     <div className={cx('wrapper-form')}>
       <h2 className={cx('title')}>Выпуск токенов</h2>
-      <form action="" className={cx('form', 'token-form')}>
+
+      <form onSubmit={createToken} className={cx('form', 'token-form')}>
         <div className={cx('input-group')}>
-          <input required type="text" name="text" className={cx('input')} />
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            className={cx('input')}
+          />
           <label className={cx('label')}>Имя токена</label>
         </div>
         <div className={cx('input-group')}>
-          <input required type="text" name="text" className={cx('input')} />
+          <input
+            type="text"
+            value={symbol}
+            onChange={(e) => setSymbol(e.target.value)}
+            required
+            className={cx('input')}
+          />
           <label className={cx('label')}>Абревеатура токена (USD)</label>
         </div>
         <div className={cx('input-group')}>
-          <input required type="text" name="text" className={cx('input')} />
+          <input
+            type="text"
+            value={ipfsDocsForApprove}
+            onChange={(e) => setIpfsDocsForApprove(e.target.value)}
+            required
+            className={cx('input')}
+          />
           <label className={cx('label')}>
             ссылка на пакет документов в ipfs (token/abcd) ???
           </label>
         </div>{' '}
         <div className={cx('input-group')}>
-          <input required type="text" name="text" className={cx('input')} />
+          <input
+            type="number"
+            value={totalSupply}
+            onChange={(e) => setTotalSupply(e.target.value)}
+            required
+            className={cx('input')}
+          />
           <label className={cx('label')}>Количество выпускаемых токенов</label>
         </div>
         <button className={cx('button-green')}>Отправить</button>
       </form>
+      <p className={cx('text-info')}>{textInfo}</p>
     </div>
   );
 };
