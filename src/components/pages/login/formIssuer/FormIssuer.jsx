@@ -11,7 +11,28 @@ const FormIssuer = () => {
   const [name, setName] = useState('');
   const [symbol, setSymbol] = useState('');
   const [totalSupply, setTotalSupply] = useState('');
-  const [textInfo, setTextInfo] = useState('');
+  const [textInfo, setTextInfo] = useState({ text: '', error: false });
+
+  async function token() {
+    let signer = null;
+    let provider;
+
+    if (window.ethereum == null) {
+      setTextInfo({
+        text: 'MetaMask не установлен. Пожалуйста, установите MetaMask и попробуйте снова.',
+        error: true,
+      });
+      provider = ethers.getDefaultProvider();
+    } else {
+      provider = new ethers.BrowserProvider(window.ethereum);
+
+      signer = await provider.getSigner();
+    }
+    const factory = new FactoryForERC20Carbon(signer, provider);
+    console.log(factory.logContractsFromStorage);
+  }
+
+  token();
 
   const createToken = async (event) => {
     event.preventDefault();
@@ -19,9 +40,10 @@ const FormIssuer = () => {
     let provider;
 
     if (window.ethereum == null) {
-      setTextInfo(
-        'MetaMask не установлен. Пожалуйста, установите MetaMask и попробуйте снова.'
-      );
+      setTextInfo({
+        text: 'MetaMask не установлен. Пожалуйста, установите MetaMask и попробуйте снова.',
+        error: true,
+      });
       provider = ethers.getDefaultProvider();
     } else {
       provider = new ethers.BrowserProvider(window.ethereum);
@@ -34,7 +56,10 @@ const FormIssuer = () => {
       await window.ethereum.request({ method: 'eth_requestAccounts' });
     } catch (error) {
       console.error(error);
-      setTextInfo('Пользователь отклонил доступ к аккаунту.');
+      setTextInfo({
+        text: 'Пользователь отклонил доступ к аккаунту.',
+        error: true,
+      });
       return;
     }
 
@@ -46,10 +71,16 @@ const FormIssuer = () => {
         totalSupply
       );
 
-      setTextInfo('Токен успешно создан!');
+      setTextInfo({
+        text: 'Токен успешно создан!',
+        error: false,
+      });
     } catch (error) {
       console.error(error);
-      setTextInfo('Ошибка создания токена.');
+      setTextInfo({
+        text: 'Ошибка создания токена.',
+        error: true,
+      });
     }
   };
 
@@ -102,7 +133,9 @@ const FormIssuer = () => {
         </div>
         <button className={cx('button-green')}>Отправить</button>
       </form>
-      <p className={cx('text-info')}>{textInfo}</p>
+      <p className={cx('text-info', textInfo.error ? 'error' : 'success')}>
+        {textInfo.text}
+      </p>
     </div>
   );
 };
