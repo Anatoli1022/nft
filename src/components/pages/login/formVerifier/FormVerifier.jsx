@@ -198,12 +198,17 @@ const FormVerifier = () => {
 
       {!isChecking && tokenInfo && !isTokenVerified && (
         <>
-          {' '}
-          <div className={cx('token-info')}>
-            <p>Название: {tokenInfo.name}</p>
-            <p>Символ: {tokenInfo.symbol}</p>
-            <p>Общее количество: {tokenInfo.totalSupply}</p>
-          </div>
+          <ul className={cx('list-info')}>
+            <li className={cx('item')}>
+              <p>Название: {tokenInfo.name}</p>
+            </li>
+            <li className={cx('item')}>
+              <p>Символ: {tokenInfo.symbol}</p>
+            </li>
+            <li className={cx('item')}>
+              <p>Общее количество: {tokenInfo.totalSupply}</p>
+            </li>
+          </ul>
           <form
             onSubmit={handleVerifySubmit}
             className={cx('form', 'token-form')}

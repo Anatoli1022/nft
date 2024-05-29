@@ -1,13 +1,39 @@
-
-
+@import '../../../../styles/variables.scss';
 .wrapper-form {
   margin-top: 40px;
+}
+
+.token-form {
+  margin-top: 20px;
 }
 
 .title {
   text-align: center;
 }
 
-.token-form {
+.list-info {
   margin-top: 20px;
+}
+
+.button-take-info {
+  margin-top: 20px;
+}
+
+.item {
+  border-top: 1px solid $color-green;
+  margin-top: 8px;
+  padding-top: 8px;
+  &:first-child {
+    border: none;
+    margin-top: 0;
+    padding-top: 0;
+  }
+}
+
+
+.error-message {
+  color: $color-read;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 20px;
 }
