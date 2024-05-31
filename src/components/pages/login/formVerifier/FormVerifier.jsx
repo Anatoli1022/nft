@@ -17,6 +17,7 @@ const FormVerifier = () => {
   const [tokenAddress, setTokenAddress] = useState('');
   const [tokenInfo, setTokenInfo] = useState(null);
   const [isTokenVerified, setIsTokenVerified] = useState(false);
+  const [verifierName, setVerifierName] = useState(null);
   const [isChecking, setIsChecking] = useState(false); // Новое состояние для отслеживания проверки
 
   useEffect(() => {
@@ -71,7 +72,7 @@ const FormVerifier = () => {
       if (verifier) {
         const userAddress = await signer.getAddress();
         const existingName = await verifier.getName(userAddress);
-
+        setVerifierName(existingName);
         if (existingName) {
           setMessage(`Вы уже зарегистрированы с именем: ${existingName}`);
         } else {
@@ -151,7 +152,7 @@ const FormVerifier = () => {
     <div className={cx('wrapper-form')}>
       <h2 className={cx('title')}>Регистрация и верификация</h2>
 
-      {!name && (
+      {!verifierName && (
         <form
           onSubmit={handleSetNameSubmit}
           className={cx('form', 'token-form')}
@@ -173,7 +174,7 @@ const FormVerifier = () => {
         </form>
       )}
 
-      {name && (
+      {verifierName && (
         <form className={cx('form', 'token-form')}>
           <div className={cx('input-group')}>
             <input
