@@ -8,7 +8,7 @@ import { FactoryForERC20Carbon } from '../../../../lib/Contracts/FactoryForERC20
 const cx = classNames.bind(styles);
 
 const FormVerifier = () => {
-  const [name, setName] = useState(null);
+  const [userName, setUserName] = useState(null);
   const [message, setMessage] = useState('');
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
@@ -46,7 +46,7 @@ const FormVerifier = () => {
         if (web3Signer && verifierInstance) {
           const userAddress = await web3Signer.getAddress();
           const existingName = await verifierInstance.getName(userAddress);
-          setName(existingName);
+          setVerifierName(existingName);
         }
       } catch (error) {
         console.error('Error getting user data:', error);
@@ -72,13 +72,15 @@ const FormVerifier = () => {
       if (verifier) {
         const userAddress = await signer.getAddress();
         const existingName = await verifier.getName(userAddress);
+
         setVerifierName(existingName);
+
         if (existingName) {
           setMessage(`Вы уже зарегистрированы с именем: ${existingName}`);
         } else {
-          const tx = await verifier.setName(name);
+          const tx = await verifier.setName(userName);
           await tx.wait(); // ожидание завершения транзакции
-          setMessage(`Имя установлено: ${name}`);
+          setMessage(`Имя установлено: ${userName}`);
         }
       }
     } catch (error) {
@@ -163,8 +165,8 @@ const FormVerifier = () => {
               type="text"
               name="text"
               className={cx('input')}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
             />
             <label className={cx('label')}>Имя</label>
           </div>
