@@ -50,9 +50,6 @@ const FormVerifier = () => {
         }
       } catch (error) {
         console.error('Error getting user data:', error);
-        setMessage(
-          'Ошибка получения данных пользователя. Проверьте консоль для получения дополнительной информации.'
-        );
       }
     };
 
@@ -64,25 +61,15 @@ const FormVerifier = () => {
     };
 
     initialize();
-  }, []);
+  }, [verifier]);
 
   const handleSetNameSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (verifier) {
-        const userAddress = await signer.getAddress();
-        const existingName = await verifier.getName(userAddress);
-
-        setVerifierName(existingName);
-
-        if (existingName) {
-          setMessage(`Вы уже зарегистрированы с именем: ${existingName}`);
-        } else {
-          const tx = await verifier.setName(userName);
-          await tx.wait(); // ожидание завершения транзакции
-          setMessage(`Имя установлено: ${userName}`);
-        }
-      }
+      const tx = await verifier.setName(userName);
+      await tx.wait(); // ожидание завершения транзакции
+      setMessage(`Имя установлено: ${userName}`);
+      setVerifierName(userName);
     } catch (error) {
       console.error(error);
       if (error.message.includes('this address already have name')) {
