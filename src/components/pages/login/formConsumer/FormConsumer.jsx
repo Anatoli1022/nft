@@ -106,14 +106,14 @@ const FormConsumer = () => {
             onChange={(e) => setTokenAddress(e.target.value)}
           />
           <label className={cx('label')}>Адрес токена</label>
-          <button
-            type="button"
-            className={cx('button-green', 'button-take-info')}
-            onClick={handleGetTokenInfo}
-          >
-            Получить информацию
-          </button>
         </div>
+        <button
+          type="button"
+          className={cx('button-green')}
+          onClick={handleGetTokenInfo}
+        >
+          Получить информацию
+        </button>
       </form>
       {tokenInfo && (
         <ul className={cx('list-info')}>
@@ -141,4 +141,3 @@ const FormConsumer = () => {
 };
 
 export default FormConsumer;
-
