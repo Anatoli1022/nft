@@ -93,12 +93,22 @@ const SearchToken = () => {
           {addressWithName.map((token, index) => (
             <li
               key={index}
-              className={cx('item','item-verifier')}
-              onClick={() => handleClick(index)}
+              className={cx(
+                'item',
+                'item-verifier',
+                expandedIndex === index ? 'active' : null
+              )}
             >
-              {expandedIndex === index ? null : <p> {token.contractAddress}</p>}
+              {expandedIndex === index ? null : (
+                <p onClick={() => handleClick(index)}>
+                  {token.contractAddress}
+                </p>
+              )}
               {expandedIndex === index && (
-                <div className={cx('item-wrapper')}>
+                <div
+                  className={cx('item-wrapper')}
+                  onClick={() => handleClick(index)}
+                >
                   <p className={cx('item-text')}>
                     <span className={cx('span-text')}>Адрес&nbsp;токена: </span>
                     {token.contractAddress}
@@ -140,7 +150,7 @@ const SearchToken = () => {
             <li key={index} className={cx('item')}>
               <p className={cx('item-text')}>
                 {/* <span className={cx('span-text')}>Адрес токена: </span>  */}
-                
+
                 {token}
               </p>
             </li>

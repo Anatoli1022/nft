@@ -75,6 +75,19 @@
   }
 }
 
+.active {
+ 
+  &::after {
+    transform: rotate(-40deg);
+    transition: 0.2s;
+  }
+
+  &::before {
+    transform: rotate(40deg);
+    transition: 0.2s;
+  }
+}
+
 .item-text {
   margin-top: 10px;
   &:first-child {
