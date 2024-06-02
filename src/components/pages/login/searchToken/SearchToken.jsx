@@ -91,24 +91,15 @@ const SearchToken = () => {
 
         <ul className={cx('list')}>
           {addressWithName.map((token, index) => (
-            <li
-              key={index}
-              className={cx(
-                'item',
-                'item-verifier',
-                expandedIndex === index ? 'active' : null
-              )}
-            >
-              {expandedIndex === index ? null : (
-                <p onClick={() => handleClick(index)}>
-                  {token.contractAddress}
-                </p>
-              )}
+            <li key={index} className={cx('item','verifier',expandedIndex === index ? 'active' : null)}>
+              <h3
+                className={cx('title-item')}
+                onClick={() => handleClick(index)}
+              >
+                {token.contractAddress}
+              </h3>
               {expandedIndex === index && (
-                <div
-                  className={cx('item-wrapper')}
-                  onClick={() => handleClick(index)}
-                >
+                <div className={cx('item-wrapper')}>
                   <p className={cx('item-text')}>
                     <span className={cx('span-text')}>Адрес&nbsp;токена: </span>
                     {token.contractAddress}
@@ -148,11 +139,11 @@ const SearchToken = () => {
         <ul className={cx('list')}>
           {unverifiedTokens.map((token, index) => (
             <li key={index} className={cx('item')}>
-              <p className={cx('item-text')}>
+              <h3 className={cx('title-item')}>
                 {/* <span className={cx('span-text')}>Адрес токена: </span>  */}
 
                 {token}
-              </p>
+              </h3>
             </li>
           ))}
         </ul>
