@@ -3,7 +3,6 @@ import { ethers } from 'ethers';
 import classNames from 'classnames/bind';
 import styles from './FormVerifier.module.scss';
 import { Verifier } from '../../../../lib/Contracts/Verifier';
-import { FactoryForERC20Carbon } from '../../../../lib/Contracts/FactoryForERC20Carbon';
 
 const cx = classNames.bind(styles);
 
@@ -11,14 +10,12 @@ const FormVerifier = () => {
   const [userName, setUserName] = useState(null);
   const [message, setMessage] = useState('');
   const [provider, setProvider] = useState(null);
-  const [signer, setSigner] = useState(null);
   const [verifier, setVerifier] = useState(null);
-  const [factory, setFactory] = useState(null);
   const [tokenAddress, setTokenAddress] = useState('');
   const [tokenInfo, setTokenInfo] = useState(null);
   const [isTokenVerified, setIsTokenVerified] = useState(false);
   const [verifierName, setVerifierName] = useState(null);
-  const [isChecking, setIsChecking] = useState(false); // Новое состояние для отслеживания проверки
+  const [isChecking, setIsChecking] = useState(false); // New status for tracking verification
 
   useEffect(() => {
     const initEthers = async () => {
@@ -26,15 +23,8 @@ const FormVerifier = () => {
         const web3Provider = new ethers.BrowserProvider(window.ethereum);
         const web3Signer = await web3Provider.getSigner();
         setProvider(web3Provider);
-        setSigner(web3Signer);
-
         const verifierInstance = new Verifier(web3Signer, web3Provider);
-        const factoryInstance = new FactoryForERC20Carbon(
-          web3Signer,
-          web3Provider
-        );
         setVerifier(verifierInstance);
-        setFactory(factoryInstance);
         return { web3Signer, verifierInstance };
       } else {
         setMessage('Пожалуйста, установите MetaMask!');
@@ -67,7 +57,7 @@ const FormVerifier = () => {
     e.preventDefault();
     try {
       const tx = await verifier.setName(userName);
-      await tx.wait(); // ожидание завершения транзакции
+      await tx.wait(); // waiting for the transaction to complete
       setMessage(`Имя установлено: ${userName}`);
       setVerifierName(userName);
     } catch (error) {
@@ -82,7 +72,7 @@ const FormVerifier = () => {
 
   const handleGetTokenInfo = async () => {
     try {
-      setIsChecking(true); // Начало проверки
+      setIsChecking(true); // The beginning of the verification
       const tokenContract = new ethers.Contract(
         tokenAddress,
         [
@@ -114,7 +104,7 @@ const FormVerifier = () => {
       console.error(error);
       setMessage('Ошибка при получении информации о токене.');
     } finally {
-      setIsChecking(false); // Конец проверки
+      setIsChecking(false); // End of verification
     }
   };
 
@@ -175,14 +165,14 @@ const FormVerifier = () => {
               onChange={(e) => setTokenAddress(e.target.value)}
             />
             <label className={cx('label')}>Адрес токена</label>
-            <button
-              type="button"
-              className={cx('button-green', 'button-take-info')}
-              onClick={handleGetTokenInfo}
-            >
-              Получить информацию
-            </button>
           </div>
+          <button
+            type="button"
+            className={cx('button-green')}
+            onClick={handleGetTokenInfo}
+          >
+            Получить информацию
+          </button>
         </form>
       )}
 

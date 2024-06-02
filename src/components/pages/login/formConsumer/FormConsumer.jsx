@@ -63,19 +63,16 @@ const FormConsumer = () => {
       setIsTokenVerified(await verifier.isTokenVerified(tokenAddress));
 
       if (isTokenVerified) {
-        // Получаем адреса контракта и верификатора
+        // We get the addresses of the contract and the verifier
         const approvedCollections = await verifier.getApprowedNftCollection();
         const verifierAddress = approvedCollections.find(
           (event) => event.contractAddress === tokenAddress
         )?.verifierAddress;
 
-        // Если нашли адрес верификатора
+        // If you have found the address of the verifier
         if (verifierAddress) {
-          // Получаем имя верификатора
+          // We get the name of the verifier
           const verifierName = await verifier.getName(verifierAddress);
-          // setMessage(
-          //   `Токен ${name} уже верифицирован. Верифицировал: ${verifierName}.`
-          // );
           setMessage(` Верифицировал: ${verifierName}.`);
         } else {
           setMessage(
@@ -128,7 +125,7 @@ const FormConsumer = () => {
           </li>
           {message && (
             <li className={cx('item')}>
-              <p> {message}</p>
+              <p> {message} </p>
             </li>
           )}
         </ul>
