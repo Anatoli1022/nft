@@ -3,6 +3,7 @@ import { ethers } from 'ethers';
 import classNames from 'classnames/bind';
 import styles from './FormVerifier.module.scss';
 import { Verifier } from '../../../../lib/Contracts/Verifier';
+import ButtonSend from '../../../shared/buttonSend/ButtonSend';
 
 const cx = classNames.bind(styles);
 
@@ -16,6 +17,7 @@ const FormVerifier = () => {
   const [isTokenVerified, setIsTokenVerified] = useState(false);
   const [verifierName, setVerifierName] = useState(null);
   const [isChecking, setIsChecking] = useState(false); // New status for tracking verification
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const initEthers = async () => {
@@ -55,12 +57,16 @@ const FormVerifier = () => {
 
   const handleSetNameSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
     try {
       const tx = await verifier.setName(userName);
       await tx.wait(); // waiting for the transaction to complete
       setMessage(`Имя установлено: ${userName}`);
       setVerifierName(userName);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error(error);
       if (error.message.includes('this address already have name')) {
         setMessage('Ошибка: для этого адреса уже установлено имя.');
@@ -70,7 +76,10 @@ const FormVerifier = () => {
     }
   };
 
-  const handleGetTokenInfo = async () => {
+  const handleGetTokenInfo = async (e) => {
+    setLoading(true);
+
+    e.preventDefault();
     try {
       setIsChecking(true); // The beginning of the verification
       const tokenContract = new ethers.Contract(
@@ -104,26 +113,27 @@ const FormVerifier = () => {
       console.error(error);
       setMessage('Ошибка при получении информации о токене.');
     } finally {
+      setLoading(false);
       setIsChecking(false); // End of verification
     }
   };
 
   const handleVerifySubmit = async (e) => {
+    setLoading(true);
+
     e.preventDefault();
     try {
       if (verifier) {
-        if (isTokenVerified) {
-          setMessage('Этот токен уже верифицирован.');
-        } else {
-          const tx = await verifier.verify(tokenAddress);
-          await tx.wait();
-          setMessage(`Контракт ${tokenAddress} верифицирован.`);
-          setIsTokenVerified(true);
-        }
+        const tx = await verifier.verify(tokenAddress);
+        await tx.wait();
+        setMessage(`Контракт ${tokenAddress} верифицирован.`);
+        setIsTokenVerified(true);
       }
     } catch (error) {
       console.error(error);
       setMessage('Не удалось верифицировать контракт.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -147,14 +157,16 @@ const FormVerifier = () => {
             />
             <label className={cx('label')}>Имя</label>
           </div>
-          <button type="submit" className={cx('button-green')}>
-            Отправить
-          </button>
+
+          <ButtonSend loading={loading} text="Отправить" />
         </form>
       )}
 
       {verifierName && (
-        <form className={cx('form', 'token-form')}>
+        <form
+          className={cx('form', 'token-form')}
+          onSubmit={handleGetTokenInfo}
+        >
           <div className={cx('input-group')}>
             <input
               required
@@ -166,13 +178,8 @@ const FormVerifier = () => {
             />
             <label className={cx('label')}>Адрес токена</label>
           </div>
-          <button
-            type="button"
-            className={cx('button-green')}
-            onClick={handleGetTokenInfo}
-          >
-            Получить информацию
-          </button>
+
+          <ButtonSend loading={loading} text="Получить информацию" />
         </form>
       )}
 
@@ -193,12 +200,7 @@ const FormVerifier = () => {
             onSubmit={handleVerifySubmit}
             className={cx('form', 'token-form')}
           >
-            <button
-              type="submit"
-              className={cx('button-green', 'button-verifier')}
-            >
-              Верифицировать
-            </button>
+            <ButtonSend loading={loading} text="Верифицировать" />
           </form>
         </>
       )}

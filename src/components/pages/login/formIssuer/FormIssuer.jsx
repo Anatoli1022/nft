@@ -3,6 +3,8 @@ import { ethers } from 'ethers';
 import { FactoryForERC20Carbon } from '../../../../lib/Contracts/FactoryForERC20Carbon';
 import classNames from 'classnames/bind';
 import styles from './FormIssuer.module.scss';
+// import Loader from '../../../shared/loader/Loader';
+import ButtonSend from '../../../shared/buttonSend/ButtonSend';
 
 const cx = classNames.bind(styles);
 
@@ -12,32 +14,13 @@ const FormIssuer = () => {
   const [symbol, setSymbol] = useState('');
   const [totalSupply, setTotalSupply] = useState('');
   const [textInfo, setTextInfo] = useState({ text: '', error: false });
-
-  async function token() {
-    let signer = null;
-    let provider;
-
-    if (window.ethereum == null) {
-      setTextInfo({
-        text: 'MetaMask не установлен. Пожалуйста, установите MetaMask и попробуйте снова.',
-        error: true,
-      });
-      provider = ethers.getDefaultProvider();
-    } else {
-      provider = new ethers.BrowserProvider(window.ethereum);
-
-      signer = await provider.getSigner();
-    }
-    const factory = new FactoryForERC20Carbon(signer, provider);
-    console.log(factory.logContractsFromStorage);
-  }
-
-  token();
+  const [loading, setLoading] = useState(false);
 
   const createToken = async (event) => {
     event.preventDefault();
     let signer = null;
     let provider;
+    setLoading(true);
 
     if (window.ethereum == null) {
       setTextInfo({
@@ -70,12 +53,13 @@ const FormIssuer = () => {
         symbol,
         totalSupply
       );
-
+      setLoading(false);
       setTextInfo({
         text: 'Токен успешно создан!',
         error: false,
       });
     } catch (error) {
+      setLoading(false);
       console.error(error);
       setTextInfo({
         text: 'Ошибка создания токена.',
@@ -120,7 +104,7 @@ const FormIssuer = () => {
           <label className={cx('label')}>
             ссылка на пакет документов в ipfs (token/abcd) ???
           </label>
-        </div>{' '}
+        </div>
         <div className={cx('input-group')}>
           <input
             type="number"
@@ -131,7 +115,8 @@ const FormIssuer = () => {
           />
           <label className={cx('label')}>Количество выпускаемых токенов</label>
         </div>
-        <button className={cx('button-green')}>Отправить</button>
+
+        <ButtonSend loading={loading} text="Отправить" />
       </form>
       <p className={cx('text-info', textInfo.error ? 'error' : 'success')}>
         {textInfo.text}
