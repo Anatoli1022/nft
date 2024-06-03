@@ -17,6 +17,12 @@
     color: $color-green;
   }
 }
+
+.button-green[disabled] {
+  background-color: $color-green;
+
+  opacity: 0.6;
+}
 .button-active {
   background: none;
   color: $color-green;
