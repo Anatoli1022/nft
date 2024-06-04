@@ -1,7 +1,9 @@
 import classNames from 'classnames/bind';
 import styles from './ButtonsList.module.scss';
+import PropTypes from 'prop-types';
 
 const cx = classNames.bind(styles);
+
 const ButtonsList = ({ toggleForm, showForm }) => {
   return (
     <ul className={cx('buttons-wrapper')}>
@@ -17,7 +19,6 @@ const ButtonsList = ({ toggleForm, showForm }) => {
         </button>
       </li>
       <li>
-        {' '}
         <button
           onClick={() => toggleForm('verifier')}
           className={cx(
@@ -38,7 +39,7 @@ const ButtonsList = ({ toggleForm, showForm }) => {
         >
           Потребитель (Завод)
         </button>
-      </li>{' '}
+      </li>
       <li>
         <button
           onClick={() => toggleForm('searchToken')}
@@ -55,3 +56,8 @@ const ButtonsList = ({ toggleForm, showForm }) => {
 };
 
 export default ButtonsList;
+
+ButtonsList.propTypes = {
+  showForm: PropTypes.string.isRequired,
+  toggleForm: PropTypes.func.isRequired,
+};
