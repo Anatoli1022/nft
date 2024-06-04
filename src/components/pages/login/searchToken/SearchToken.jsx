@@ -4,6 +4,8 @@ import classNames from 'classnames/bind';
 import styles from './SearchToken.module.scss';
 import { Verifier } from '../../../../lib/Contracts/Verifier';
 import { FactoryForERC20Carbon } from '../../../../lib/Contracts/FactoryForERC20Carbon';
+import LoaderGreen from '../../../shared/loaderGreen/LoaderGreen.jsx';
+
 const cx = classNames.bind(styles);
 
 const SearchToken = () => {
@@ -13,6 +15,8 @@ const SearchToken = () => {
   const [addressWithName, setAddressWithName] = useState([]);
   const [unverifiedTokens, setUnverifiedTokens] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const initEthers = async () => {
       if (window.ethereum) {
@@ -30,48 +34,60 @@ const SearchToken = () => {
 
   useEffect(() => {
     const fetchTokens = async () => {
+      setLoading(true); // Устанавливаем loading в true перед началом загрузки
+
       if (verifier && factory) {
-        const tokens = await verifier.getApprowedNftCollection();
-        const allTokens = await factory.logContractsFromStorage();
+        try {
+          const tokens = await verifier.getApprowedNftCollection();
+          const allTokens = await factory.logContractsFromStorage();
 
-        const verifiedAddresses = tokens.map((token) => token.contractAddress);
-        const verifierAddresses = tokens.map((token) => token.verifierAddress);
+          const verifiedAddresses = tokens.map(
+            (token) => token.contractAddress
+          );
+          const verifierAddresses = tokens.map(
+            (token) => token.verifierAddress
+          );
 
-        const verifiedNames = await Promise.all(
-          verifierAddresses.map((address) => verifier.getName(address))
-        );
+          const verifiedNames = await Promise.all(
+            verifierAddresses.map((address) => verifier.getName(address))
+          );
 
-        const tokensWithVerifierNames = tokens.map((token, index) => ({
-          ...token,
-          verifierName: verifiedNames[index],
-        }));
+          const tokensWithVerifierNames = tokens.map((token, index) => ({
+            ...token,
+            verifierName: verifiedNames[index],
+          }));
 
-        const tokenDetails = await Promise.all(
-          tokensWithVerifierNames.map(async (token) => {
-            const tokenContract = new ethers.Contract(
-              token.contractAddress,
-              [
-                'function symbol() view returns (string)',
-                'function totalSupply() view returns (uint256)',
-              ],
-              verifier.provider
-            );
-            const symbol = await tokenContract.symbol();
-            const totalSupply = await tokenContract.totalSupply();
-            return {
-              ...token,
-              symbol,
-              totalSupply: totalSupply.toString(),
-            };
-          })
-        );
+          const tokenDetails = await Promise.all(
+            tokensWithVerifierNames.map(async (token) => {
+              const tokenContract = new ethers.Contract(
+                token.contractAddress,
+                [
+                  'function symbol() view returns (string)',
+                  'function totalSupply() view returns (uint256)',
+                ],
+                verifier.provider
+              );
+              const symbol = await tokenContract.symbol();
+              const totalSupply = await tokenContract.totalSupply();
+              return {
+                ...token,
+                symbol,
+                totalSupply: totalSupply.toString(),
+              };
+            })
+          );
 
-        setAddressWithName(tokenDetails);
+          setAddressWithName(tokenDetails);
 
-        const unverified = allTokens.filter(
-          (token) => !verifiedAddresses.includes(token)
-        );
-        setUnverifiedTokens(unverified);
+          const unverified = allTokens.filter(
+            (token) => !verifiedAddresses.includes(token)
+          );
+          setUnverifiedTokens(unverified);
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
       }
     };
 
@@ -90,8 +106,21 @@ const SearchToken = () => {
         <h3 className={cx('title')}>Верифицированные токены</h3>
 
         <ul className={cx('list')}>
+          {loading ? (
+            <div className={cx('wrapper-loader')}>
+              <LoaderGreen />
+            </div>
+          ) : null}
+
           {addressWithName.map((token, index) => (
-            <li key={index} className={cx('item','verifier',expandedIndex === index ? 'active' : null)}>
+            <li
+              key={index}
+              className={cx(
+                'item',
+                'verifier',
+                expandedIndex === index ? 'active' : null
+              )}
+            >
               <h3
                 className={cx('title-item')}
                 onClick={() => handleClick(index)}
@@ -137,6 +166,12 @@ const SearchToken = () => {
       <div className={cx('info-tokens')}>
         <h3 className={cx('title')}>Неверифицированные токены</h3>
         <ul className={cx('list')}>
+          {loading ? (
+            <div className={cx('wrapper-loader')}>
+              <LoaderGreen />
+            </div>
+          ) : null}
+
           {unverifiedTokens.map((token, index) => (
             <li key={index} className={cx('item')}>
               <h3 className={cx('title-item')}>
