@@ -3,6 +3,7 @@ import { ethers } from 'ethers';
 import { Verifier } from '../../../../lib/Contracts/Verifier';
 import classNames from 'classnames/bind';
 import styles from './FormConsumer.module.scss';
+import ButtonSend from '../../../shared/buttonSend/ButtonSend';
 
 const cx = classNames.bind(styles);
 
@@ -12,7 +13,7 @@ const FormConsumer = () => {
   const [verifier, setVerifier] = useState(null);
   const [tokenAddress, setTokenAddress] = useState('');
   const [tokenInfo, setTokenInfo] = useState(null);
-  const [isTokenVerified, setIsTokenVerified] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const initEthers = async () => {
@@ -34,7 +35,9 @@ const FormConsumer = () => {
     initEthers();
   }, []);
 
-  const handleGetTokenInfo = async () => {
+  const handleGetTokenInfo = async (e) => {
+    setLoading(true);
+    e.preventDefault();
     try {
       const tokenContract = new ethers.Contract(
         tokenAddress,
@@ -52,39 +55,39 @@ const FormConsumer = () => {
         tokenContract.totalSupply(),
       ]);
 
-      setTokenInfo({
-        name,
-        symbol,
-        totalSupply: totalSupply.toString(),
-      });
-
       setMessage('');
 
-      setIsTokenVerified(await verifier.isTokenVerified(tokenAddress));
+      try {
+        if (await verifier.isTokenVerified(tokenAddress)) {
+          // We get the addresses of the contract and the verifier
+          const approvedCollections = await verifier.getApprowedNftCollection();
+          const verifierAddress = approvedCollections.find(
+            (event) => event.contractAddress === tokenAddress
+          )?.verifierAddress;
 
-      if (isTokenVerified) {
-        // We get the addresses of the contract and the verifier
-        const approvedCollections = await verifier.getApprowedNftCollection();
-        const verifierAddress = approvedCollections.find(
-          (event) => event.contractAddress === tokenAddress
-        )?.verifierAddress;
-
-        // If you have found the address of the verifier
-        if (verifierAddress) {
-          // We get the name of the verifier
-          const verifierName = await verifier.getName(verifierAddress);
-          setMessage(` Верифицировал: ${verifierName}.`);
+          // If you have found the address of the verifier
+          if (verifierAddress) {
+            const verifierName = await verifier.getName(verifierAddress);
+            setMessage(` Верифицировал: ${verifierName}.`);
+          }
         } else {
-          setMessage(
-            `Не удалось найти информацию о верификаторе для токена ${name}.`
-          );
+          setMessage('Токен не верифицирован');
         }
-      } else {
-        setMessage('Токен не верифицирован');
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+        setTokenInfo({
+          name,
+          symbol,
+          totalSupply: totalSupply.toString(),
+          verifier: message,
+        });
       }
     } catch (error) {
       console.error(error);
       setTokenInfo(null);
+      setLoading(false);
       setMessage('Ошибка при получении информации о токене.');
     }
   };
@@ -92,7 +95,7 @@ const FormConsumer = () => {
   return (
     <div className={cx('wrapper-form')}>
       <h2 className={cx('title')}>Просмотреть контракт</h2>
-      <form className={cx('form', 'token-form')}>
+      <form className={cx('form', 'token-form')} onSubmit={handleGetTokenInfo}>
         <div className={cx('input-group')}>
           <input
             required
@@ -104,13 +107,8 @@ const FormConsumer = () => {
           />
           <label className={cx('label')}>Адрес токена</label>
         </div>
-        <button
-          type="button"
-          className={cx('button-green')}
-          onClick={handleGetTokenInfo}
-        >
-          Получить информацию
-        </button>
+
+        <ButtonSend loading={loading} text="Получить информацию" />
       </form>
       {tokenInfo && (
         <ul className={cx('list-info')}>
