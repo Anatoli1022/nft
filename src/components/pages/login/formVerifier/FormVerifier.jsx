@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 import classNames from 'classnames/bind';
 import styles from './FormVerifier.module.scss';
 import { Verifier } from '../../../../lib/Contracts/Verifier';
-import ButtonSend from '../../../shared/buttonSend/ButtonSend';
+import Button from '../../../shared/button/Button';
 
 const cx = classNames.bind(styles);
 
@@ -88,19 +88,24 @@ const FormVerifier = () => {
           'function name() view returns (string)',
           'function symbol() view returns (string)',
           'function totalSupply() view returns (uint)',
+          'function getApproveDocs() view returns (string)',
         ],
         provider
       );
-      const [name, symbol, totalSupply] = await Promise.all([
+      const [name, symbol, totalSupply, approveDocs] = await Promise.all([
         tokenContract.name(),
         tokenContract.symbol(),
         tokenContract.totalSupply(),
+        tokenContract.getApproveDocs(),
       ]);
+
       setTokenInfo({
         name,
         symbol,
         totalSupply: totalSupply.toString(),
+        approveDocs,
       });
+
       setMessage('');
 
       // Check if the token is already verified
@@ -158,7 +163,13 @@ const FormVerifier = () => {
             <label className={cx('label')}>Имя</label>
           </div>
 
-          <ButtonSend loading={loading} text="Отправить" />
+          <Button
+            className={cx('button-green')}
+            loading={loading}
+            type="submit"
+          >
+            Отправить
+          </Button>
         </form>
       )}
 
@@ -179,7 +190,13 @@ const FormVerifier = () => {
             <label className={cx('label')}>Адрес токена</label>
           </div>
 
-          <ButtonSend loading={loading} text="Получить информацию" />
+          <Button
+            className={cx('button-green')}
+            loading={loading}
+            type="submit"
+          >
+            Получить информацию
+          </Button>
         </form>
       )}
 
@@ -194,13 +211,25 @@ const FormVerifier = () => {
             </li>
             <li className={cx('item')}>
               <p>Общее количество: {tokenInfo.totalSupply}</p>
+            </li>{' '}
+            <li className={cx('item')}>
+              <p>
+                Документы одобрения:{' '}
+                <a href={tokenInfo.approveDocs}>{tokenInfo.approveDocs}</a>
+              </p>
             </li>
           </ul>
           <form
             onSubmit={handleVerifySubmit}
             className={cx('form', 'token-form')}
           >
-            <ButtonSend loading={loading} text="Верифицировать" />
+            <Button
+              className={cx('button-green')}
+              loading={loading}
+              type="submit"
+            >
+              Верифицировать
+            </Button>
           </form>
         </>
       )}

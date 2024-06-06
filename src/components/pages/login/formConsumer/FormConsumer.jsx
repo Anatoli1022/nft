@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 import { Verifier } from '../../../../lib/Contracts/Verifier';
 import classNames from 'classnames/bind';
 import styles from './FormConsumer.module.scss';
-import ButtonSend from '../../../shared/buttonSend/ButtonSend';
+import Button from '../../../shared/button/Button';
 
 const cx = classNames.bind(styles);
 
@@ -45,14 +45,16 @@ const FormConsumer = () => {
           'function name() view returns (string)',
           'function symbol() view returns (string)',
           'function totalSupply() view returns (uint)',
+          'function getApproveDocs() view returns (string)',
         ],
         provider
       );
 
-      const [name, symbol, totalSupply] = await Promise.all([
+      const [name, symbol, totalSupply, approveDocs] = await Promise.all([
         tokenContract.name(),
         tokenContract.symbol(),
         tokenContract.totalSupply(),
+        tokenContract.getApproveDocs(),
       ]);
 
       setMessage('');
@@ -68,21 +70,27 @@ const FormConsumer = () => {
           // If you have found the address of the verifier
           if (verifierAddress) {
             const verifierName = await verifier.getName(verifierAddress);
-            setMessage(` Верифицировал: ${verifierName}.`);
+            setTokenInfo({
+              name,
+              symbol,
+              totalSupply: totalSupply.toString(),
+              approveDocs,
+              verifier: `Верифицировал: ${verifierName}.`,
+            });
           }
         } else {
-          setMessage('Токен не верифицирован');
+          setTokenInfo({
+            name,
+            symbol,
+            totalSupply: totalSupply.toString(),
+            approveDocs,
+            verifier: 'Токен не верифицирован',
+          });
         }
       } catch (error) {
         console.error(error);
       } finally {
         setLoading(false);
-        setTokenInfo({
-          name,
-          symbol,
-          totalSupply: totalSupply.toString(),
-          verifier: message,
-        });
       }
     } catch (error) {
       console.error(error);
@@ -108,7 +116,9 @@ const FormConsumer = () => {
           <label className={cx('label')}>Адрес токена</label>
         </div>
 
-        <ButtonSend loading={loading} text="Получить информацию" />
+        <Button className={cx('button-green')} loading={loading} type="submit">
+          Получить информацию
+        </Button>
       </form>
       {tokenInfo && (
         <ul className={cx('list-info')}>
@@ -121,11 +131,15 @@ const FormConsumer = () => {
           <li className={cx('item')}>
             <p>Общее количество: {tokenInfo.totalSupply}</p>
           </li>
-          {message && (
-            <li className={cx('item')}>
-              <p> {message} </p>
-            </li>
-          )}
+          <li className={cx('item')}>
+            <p>
+              Документы одобрения:
+              <a href={tokenInfo.approveDocs}>{tokenInfo.approveDocs}</a>
+            </p>
+          </li>
+          <li className={cx('item')}>
+            <p> {tokenInfo.verifier} </p>
+          </li>
         </ul>
       )}
       {message && !tokenInfo && (

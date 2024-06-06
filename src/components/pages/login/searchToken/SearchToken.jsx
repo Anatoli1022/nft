@@ -34,7 +34,7 @@ const SearchToken = () => {
 
   useEffect(() => {
     const fetchTokens = async () => {
-      setLoading(true); // Устанавливаем loading в true перед началом загрузки
+      setLoading(true);
 
       if (verifier && factory) {
         try {
@@ -64,25 +64,28 @@ const SearchToken = () => {
                 [
                   'function symbol() view returns (string)',
                   'function totalSupply() view returns (uint256)',
+                  'function getApproveDocs() view returns (string)',
                 ],
                 verifier.provider
               );
               const symbol = await tokenContract.symbol();
               const totalSupply = await tokenContract.totalSupply();
+              const approveDocs = await tokenContract.getApproveDocs();
               return {
                 ...token,
                 symbol,
                 totalSupply: totalSupply.toString(),
+                approveDocs,
               };
             })
           );
 
-          setAddressWithName(tokenDetails);
+          setAddressWithName(tokenDetails.reverse());
 
           const unverified = allTokens.filter(
             (token) => !verifiedAddresses.includes(token)
           );
-          setUnverifiedTokens(unverified);
+          setUnverifiedTokens(unverified.reverse());
         } catch (error) {
           console.error(error);
         } finally {
@@ -112,54 +115,65 @@ const SearchToken = () => {
             </div>
           ) : null}
 
-          {addressWithName.map((token, index) => (
-            <li
-              key={index}
-              className={cx(
-                'item',
-                'verifier',
-                expandedIndex === index ? 'active' : null
-              )}
-            >
-              <h3
-                className={cx('title-item')}
-                onClick={() => handleClick(index)}
+          {addressWithName.map((token, index) => {
+            return (
+              <li
+                key={index}
+                className={cx(
+                  'item',
+                  'verifier',
+                  expandedIndex === index ? 'active' : null
+                )}
               >
-                {token.contractAddress}
-              </h3>
-              {expandedIndex === index && (
-                <div className={cx('item-wrapper')}>
-                  <p className={cx('item-text')}>
-                    <span className={cx('span-text')}>Адрес&nbsp;токена: </span>
-                    {token.contractAddress}
-                  </p>
+                <h3
+                  className={cx('title-item')}
+                  onClick={() => handleClick(index)}
+                >
+                  {token.contractAddress}
+                </h3>
+                {expandedIndex === index && (
+                  <div className={cx('item-wrapper')}>
+                    <p className={cx('item-text')}>
+                      <span className={cx('span-text')}>
+                        Адрес&nbsp;токена:{' '}
+                      </span>
+                      {token.contractAddress}
+                    </p>
 
-                  <p className={cx('item-text')}>
-                    <span className={cx('span-text')}>
-                      Адрес&nbsp;верификатора:{' '}
-                    </span>
-                    {token.verifierAddress}
-                  </p>
-                  <p className={cx('item-text')}>
-                    <span className={cx('span-text')}>
-                      Имя&nbsp;верификатора:{' '}
-                    </span>
-                    {token.verifierName}
-                  </p>
-                  <p className={cx('item-text')}>
-                    <span className={cx('span-text')}>Символ: </span>{' '}
-                    {token.symbol}
-                  </p>
-                  <p className={cx('item-text')}>
-                    <span className={cx('span-text')}>
-                      Общее количество токенов:{' '}
-                    </span>
-                    {token.totalSupply}
-                  </p>
-                </div>
-              )}
-            </li>
-          ))}
+                    <p className={cx('item-text')}>
+                      <span className={cx('span-text')}>
+                        Адрес&nbsp;верификатора:{' '}
+                      </span>
+                      {token.verifierAddress}
+                    </p>
+                    <p className={cx('item-text')}>
+                      <span className={cx('span-text')}>
+                        Имя&nbsp;верификатора:{' '}
+                      </span>
+                      {token.verifierName}
+                    </p>
+                    <p className={cx('item-text')}>
+                      <span className={cx('span-text')}>Символ: </span>{' '}
+                      {token.symbol}
+                    </p>
+                    <p className={cx('item-text')}>
+                      <span className={cx('span-text')}>
+                        Общее количество токенов:{' '}
+                      </span>
+                      {token.totalSupply}
+                    </p>
+                    <p className={cx('item-text')}>
+                      <span className={cx('span-text')}>
+                        Документы для одобрения:{' '}
+                      </span>
+
+                      <a href={token.approveDocs}>Посмотреть</a>
+                    </p>
+                  </div>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </div>
 
@@ -174,11 +188,7 @@ const SearchToken = () => {
 
           {unverifiedTokens.map((token, index) => (
             <li key={index} className={cx('item')}>
-              <h3 className={cx('title-item')}>
-                {/* <span className={cx('span-text')}>Адрес токена: </span>  */}
-
-                {token}
-              </h3>
+              <h3 className={cx('title-item')}>{token}</h3>
             </li>
           ))}
         </ul>
