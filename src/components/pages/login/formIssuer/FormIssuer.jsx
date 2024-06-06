@@ -3,18 +3,22 @@ import { ethers } from 'ethers';
 import { FactoryForERC20Carbon } from '../../../../lib/Contracts/FactoryForERC20Carbon';
 import classNames from 'classnames/bind';
 import styles from './FormIssuer.module.scss';
-// import Loader from '../../../shared/loader/Loader';
-import ButtonSend from '../../../shared/buttonSend/ButtonSend';
+import Button from '../../../shared/button/Button';
 
 const cx = classNames.bind(styles);
 
 const FormIssuer = () => {
-  const [ipfsDocsForApprove, setIpfsDocsForApprove] = useState('');
+  const [ipfsDocsForApprove, setIpfsDocsForApprove] = useState(null);
   const [name, setName] = useState('');
   const [symbol, setSymbol] = useState('');
   const [totalSupply, setTotalSupply] = useState('');
   const [textInfo, setTextInfo] = useState({ text: '', error: false });
   const [loading, setLoading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState();
+
+  const changeHandler = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
 
   const createToken = async (event) => {
     event.preventDefault();
@@ -68,6 +72,42 @@ const FormIssuer = () => {
     }
   };
 
+  const handleSubmission = async () => {
+    setIpfsDocsForApprove(null);
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      const metadata = JSON.stringify({
+        name: 'File name',
+      });
+      formData.append('pinataMetadata', metadata);
+
+      const options = JSON.stringify({
+        cidVersion: 0,
+      });
+      formData.append('pinataOptions', options);
+
+      const res = await fetch(
+        'https://api.pinata.cloud/pinning/pinFileToIPFS',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${import.meta.env.VITE_PINATA_JWT}`,
+          },
+          body: formData,
+        }
+      );
+      const resData = await res.json();
+
+      setIpfsDocsForApprove(resData.IpfsHash);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className={cx('wrapper-form')}>
       <h2 className={cx('title')}>Выпуск токенов</h2>
@@ -93,18 +133,39 @@ const FormIssuer = () => {
           />
           <label className={cx('label')}>Абревеатура токена (USD)</label>
         </div>
-        <div className={cx('input-group')}>
-          <input
-            type="text"
-            value={ipfsDocsForApprove}
-            onChange={(e) => setIpfsDocsForApprove(e.target.value)}
-            required
-            className={cx('input')}
-          />
-          <label className={cx('label')}>
-            ссылка на пакет документов в ipfs (token/abcd) ???
-          </label>
+
+        <div className={cx('wrapper-input-group')}>
+          <div className={cx('input-group')}>
+            <input
+              type="file"
+              onChange={changeHandler}
+              className={cx('input', !selectedFile ? 'input-file' : null)}
+              required
+            />
+            <label className={cx('label')}>Документ Ipfs</label>
+          </div>
+
+          <Button
+            loading={loading}
+            type="button"
+            onClick={handleSubmission}
+            className={cx('button-green','button-ipfs')}
+          >
+            Подтвердить
+          </Button>
         </div>
+
+        {ipfsDocsForApprove && (
+          <a
+            href={`${
+              import.meta.env.VITE_GATEWAY_URL
+            }/ipfs/${ipfsDocsForApprove}`}
+            className={cx('link')}
+          >
+            Документы успешно загружены
+          </a>
+        )}
+
         <div className={cx('input-group')}>
           <input
             type="number"
@@ -116,7 +177,9 @@ const FormIssuer = () => {
           <label className={cx('label')}>Количество выпускаемых токенов</label>
         </div>
 
-        <ButtonSend loading={loading} text="Отправить" />
+        <Button className={cx('button-green')} loading={loading} type="submit">
+          Отправить
+        </Button>
       </form>
       <p className={cx('text-info', textInfo.error ? 'error' : 'success')}>
         {textInfo.text}

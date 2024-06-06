@@ -12,6 +12,26 @@
   margin-top: 20px;
 }
 
+.wrapper-input-group {
+  display: flex;
+  column-gap: 10px;
+  align-items: center;
+}
+
+.button-ipfs {
+  min-width: 147px;
+}
+
+.link {
+  text-align: center;
+  color: $color-black;
+  transition: $transition-base;
+
+  &:hover {
+    color: $color-green;
+  }
+}
+
 .text-info {
   text-align: center;
   margin-top: 20px;
