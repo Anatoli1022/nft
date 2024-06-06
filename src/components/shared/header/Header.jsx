@@ -22,11 +22,6 @@ const Header = () => {
                 Главная
               </Link>
             </li>
-            <li>
-              <Link to="/products" className={cx('link')}>
-                Продукты
-              </Link>
-            </li>
 
             <li>
               {logined ? (
@@ -41,7 +36,7 @@ const Header = () => {
             </li>
             <li>
               <Link to="/profile" className={cx('link')}>
-                Профиль test
+                Профиль
               </Link>
             </li>
           </ul>
