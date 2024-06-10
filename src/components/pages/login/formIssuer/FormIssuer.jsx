@@ -15,6 +15,9 @@ const FormIssuer = () => {
   const [textInfo, setTextInfo] = useState({ text: '', error: false });
   const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState();
+  const url = 'https://api.pinata.cloud/pinning/pinFileToIPFS';
+  const pinataJWT = import.meta.env.VITE_PINATA_JWT;
+  const gatewayURL = import.meta.env.VITE_GATEWAY_URL;
 
   const changeHandler = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -88,16 +91,13 @@ const FormIssuer = () => {
       });
       formData.append('pinataOptions', options);
 
-      const res = await fetch(
-        'https://api.pinata.cloud/pinning/pinFileToIPFS',
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_PINATA_JWT}`,
-          },
-          body: formData,
-        }
-      );
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${pinataJWT}`,
+        },
+        body: formData,
+      });
       const resData = await res.json();
 
       setIpfsDocsForApprove(resData.IpfsHash);
@@ -149,7 +149,7 @@ const FormIssuer = () => {
             loading={loading}
             type="button"
             onClick={handleSubmission}
-            className={cx('button-green','button-ipfs')}
+            className={cx('button-green', 'button-ipfs')}
           >
             Подтвердить
           </Button>
@@ -157,9 +157,7 @@ const FormIssuer = () => {
 
         {ipfsDocsForApprove && (
           <a
-            href={`${
-              import.meta.env.VITE_GATEWAY_URL
-            }/ipfs/${ipfsDocsForApprove}`}
+            href={`${gatewayURL}/ipfs/${ipfsDocsForApprove}`}
             className={cx('link')}
           >
             Документы успешно загружены
