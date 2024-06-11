@@ -17,10 +17,18 @@ const FormIssuer = () => {
   const [selectedFile, setSelectedFile] = useState();
   const url = 'https://api.pinata.cloud/pinning/pinFileToIPFS';
   const pinataJWT = import.meta.env.VITE_PINATA_JWT;
-  const gatewayURL = import.meta.env.VITE_GATEWAY_URL;
 
   const changeHandler = (event) => {
     setSelectedFile(event.target.files[0]);
+  };
+
+  const resetForm = () => {
+    setName('');
+    setSymbol('');
+    setTotalSupply('');
+    setSelectedFile();
+    setIpfsDocsForApprove(null);
+    setTextInfo({ text: '', error: false });
   };
 
   const createToken = async (event) => {
@@ -60,18 +68,20 @@ const FormIssuer = () => {
         symbol,
         totalSupply
       );
-      setLoading(false);
+
       setTextInfo({
         text: 'Токен успешно создан!',
         error: false,
       });
     } catch (error) {
-      setLoading(false);
       console.error(error);
       setTextInfo({
         text: 'Ошибка создания токена.',
         error: true,
       });
+    } finally {
+      setLoading(false);
+      resetForm();
     }
   };
 
@@ -80,9 +90,10 @@ const FormIssuer = () => {
     setLoading(true);
     try {
       const formData = new FormData();
+
       formData.append('file', selectedFile);
       const metadata = JSON.stringify({
-        name: 'File name',
+        name: selectedFile.name,
       });
       formData.append('pinataMetadata', metadata);
 
@@ -157,7 +168,7 @@ const FormIssuer = () => {
 
         {ipfsDocsForApprove && (
           <a
-            href={`${gatewayURL}/ipfs/${ipfsDocsForApprove}`}
+            href={`https://ipfs.io/ipfs/${ipfsDocsForApprove}`}
             className={cx('link')}
           >
             Документы успешно загружены
