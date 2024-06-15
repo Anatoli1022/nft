@@ -4,18 +4,41 @@
   position: relative;
 }
 
-.hero-container {
-  position: relative;
-  padding-top: 80px;
-  padding-left: 40px;
-  padding-bottom: 180px;
+.wrapper {
+  margin-top: 20px;
+}
+.list-title {
+  font-weight: 500;
 }
 
-.title {
-  font-size: 96px;
-  font-weight: 700;
-  line-height: 110%;
-  color: $color-white;
+.list {
+  margin-top: 10px;
+}
+
+.order-list {
+  padding-left: 10px;
+  margin-top: 5px;
+}
+
+.item {
+  margin-top: 10px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+.item-text {
+  display: inline-block;
+}
+
+.item-link {
+  margin-left: 10px;
+  color: $color-green;
+  transition: $transition-base;
+
+  &:hover {
+    color: $color-green-lite;
+  }
 }
 
 .button {
