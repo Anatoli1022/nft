@@ -3,8 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from './layouts/layout';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
-
-import Login from './pages/Login';
+import Tokens from './pages/Tokens';
 import NotFound from './pages/NotFound';
 
 const App = () => {
@@ -14,7 +13,7 @@ const App = () => {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="login" element={<Login />} />
+          <Route path="login" element={<Tokens />} />
           <Route path="notFound" element={<NotFound />} />
         </Route>
       </Routes>
