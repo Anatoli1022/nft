@@ -117,16 +117,13 @@ const SearchToken = () => {
 
           {addressWithName.map((token, index) => {
             return (
-              <li
-                key={index}
-                className={cx(
-                  'item',
-                  'verifier',
-                  expandedIndex === index ? 'active' : null
-                )}
-              >
+              <li key={index} className={cx('item')}>
                 <h3
-                  className={cx('title-item')}
+                  className={cx(
+                    'title-item',
+                    'verifier',
+                    expandedIndex === index ? 'active' : null
+                  )}
                   onClick={() => handleClick(index)}
                 >
                   {token.contractAddress}
@@ -167,7 +164,9 @@ const SearchToken = () => {
                         Документы для одобрения:{' '}
                       </span>
 
-                      <a href={token.approveDocs}>Посмотреть</a>
+                      <a href={token.approveDocs} target="_blank">
+                        Посмотреть
+                      </a>
                     </p>
                   </div>
                 )}

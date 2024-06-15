@@ -170,8 +170,9 @@ const FormIssuer = () => {
           <a
             href={`https://ipfs.io/ipfs/${ipfsDocsForApprove}`}
             className={cx('link')}
+            target="_blank"
           >
-            Документы успешно загружены
+            Документы успешно загружены, нажмите для просмотра.
           </a>
         )}
 

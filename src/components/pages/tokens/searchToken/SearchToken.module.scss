@@ -53,8 +53,6 @@
 }
 
 .verifier {
-  cursor: pointer;
-
   &::after,
   &::before {
     position: absolute;
@@ -92,6 +90,7 @@
 }
 
 .title-item {
+  cursor: pointer;
   font-size: 18px;
   font-weight: 500;
 }
