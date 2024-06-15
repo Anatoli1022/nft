@@ -29,8 +29,8 @@ const Header = () => {
                   Профиль
                 </Link>
               ) : (
-                <Link to="/login" className={cx('link')}>
-                  Войти
+                <Link to="/tokens" className={cx('link')}>
+                  Токены
                 </Link>
               )}
             </li>

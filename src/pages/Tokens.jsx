@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
-import FormIssuer from '../components/pages/login/tokens/formIssuer/FormIssuer';
-import FormVerifier from '../components/pages/login/tokens/formVerifier/FormVerifier';
-import FormConsumer from '../components/pages/login/tokens/formConsumer/FormConsumer';
-import ButtonsList from '../components/pages/login/tokens/buttonsList/ButtonsList';
-import SearchToken from '../components/pages/login/tokens/searchToken/SearchToken';
+import FormIssuer from '../components/pages/tokens/formIssuer/FormIssuer';
+import FormVerifier from '../components/pages/tokens/formVerifier/FormVerifier';
+import FormConsumer from '../components/pages/tokens/formConsumer/FormConsumer';
+import ButtonsList from '../components/pages/tokens/buttonsList/ButtonsList';
+import SearchToken from '../components/pages/tokens/searchToken/SearchToken';
 
 const Tokens = () => {
   const [showForm, setShowForm] = useState('issuer');
