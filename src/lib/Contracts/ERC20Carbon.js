@@ -7,6 +7,7 @@ const ERC20Carbon_CONTRACT_ABI = [
     "function decimals() public view returns (uint8)",
     "function totalSupply() public view returns (uint256)",
     "function balanceOf(address account) public view returns (uint256)",
+    "function burn(uint256 amount) public",
 ];
 
 
@@ -52,5 +53,11 @@ export class ERC20Carbon {
         let contractERC20 = new Contract(this.contractAddress, ERC20Carbon_CONTRACT_ABI, this.provider);
         let result = await contractERC20.balanceOf(address);
         return Number(result);
+    }
+
+    async burn(amount) {
+        let contractERC20 = new Contract(this.contractAddress, ERC20Carbon_CONTRACT_ABI, this.signer);
+        let result = await contractERC20.burn(amount);
+        return (result);
     }
 }
